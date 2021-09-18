@@ -2,61 +2,31 @@ console.log("#### Hello,This is Mark Lurie's entrance exam ####");
 
 const students = ["Eden", "Refael", "Yoni", "Nitzan", "Hadas"];
 const attendees = 
- [["Eden", "Refael", "Yoni", "Nitzan", "Hadas", "Ortal"],
- ["Berry", "Nitzan", "Yoni", "Eden", "Hadas", "Ortal"],
- ["Maxim", "Ortal", "Yoni", "Refael", "Nitzan", "Alex"],
- ["Eden", "Andrew", "Yoni", "Nitzan", "Ortal","Nitzan"]];
+           [["Eden", "Refael", "Yoni", "Nitzan", "Hadas", "Ortal"],
+           ["Berry", "Nitzan", "Yoni", "Eden", "Hadas", "Ortal"],
+           ["Maxim", "Ortal", "Yoni", "Refael", "Nitzan", "Alex"],
+           ["Eden", "Andrew", "Yoni", "Nitzan", "Ortal","Nitzan"]];
 const n = 3;
-
-/**
- * Checks if @studentName appears in the attendees list of a specific lecture.
- * Returns true if yes, otherwise false.
- **/
-const hasStudentAttendedALecture = (studentName, lectureAttendees) => {
-    for (let i = 0; i < lectureAttendees.length; i++) {
-      if (studentName == lectureAttendees[i]) {
-        return true;
-      }
-    }
-    return false;
-}
 
 const topNStudentsAttendees = (students, attendees, N) => { 
   // Create map to count # of participations in any lecture
   const participationMap = new Map();
   
   // Inflate the map for each student in the given list
-  for (let i = 0 ; i < students.length ; i++) {
-    const currentStudent = students[i];
-    participationMap[students[i]] = 0; // Initialize the student's # of participations
+  students.forEach(currentStudent => {
+    participationMap[currentStudent] = 0; // Initialize the student's # of participations
     
     // Iterate over all lectures and increase parcipations if relevant
-    for (let j = 0; j < attendees.length; j++) {
-      if (hasStudentAttendedALecture(currentStudent, attendees[j])) {
-        participationMap[currentStudent]++;
-      }
-    }
-  }
+    attendees.forEach(lecture => {
+      if (lecture.includes(currentStudent)) participationMap[currentStudent]++;
+    })
+  })
   
   // console.log(participationMap);
- 
-  // Create items array to map the participations.
-  var items = Object.keys(participationMap).map(function(key) {
-    return [key, participationMap[key]];
-  });
-  
-  // Sort the array based on the second element
-  items.sort(function(first, second) {
-    return second[1] - first[1];
-  });
-
-  let sorted = items.slice(0, N);
-
-  var topNStudentsNames = Object.keys(sorted).map(function(key) {
-    return sorted[key][0]; // return the name of the student.
-  })
    
-	return topNStudentsNames;
+  const topAttendeesList = students.sort((student1, student2) => { return participationMap[student2] - participationMap[student1] })
+   
+	return topAttendeesList.slice(0, N);
 }
 
 console.log(topNStudentsAttendees(students, attendees, n))
